@@ -1,0 +1,55 @@
+ef read_route_instructions(file_path):
+    """
+    Reads route instructions from a file and returns a list of coordinates.
+
+    Args:
+        file_path (str): Path to the route guidance file.
+
+    Returns:
+        list: List of coordinates (e.g., [(x1, y1), (x2, y2), ...]).
+    """
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+            route_lines = content.split('\n')  # Split by newline
+            route_coordinates = [tuple(map(int, line.split(','))) for line in route_lines]
+            return route_coordinates
+    except FileNotFoundError:
+        print("Error: File not found.")
+        return []
+
+def validate_coordinates(x, y):
+    """
+    Validates if the coordinates are within the 12x12 grid.
+
+    Args:
+        x (int): X-coordinate.
+        y (int): Y-coordinate.
+
+    Returns:
+        bool: True if coordinates are valid, False otherwise.
+    """
+    return 0 <= x < 12 and 0 <= y < 12
+
+def plot_route(route_coordinates):
+    """
+    Plots the route on a 12x12 grid and displays it.
+
+    Args:
+        route_coordinates (list): List of coordinates.
+    """
+    grid = [[' ' for _ in range(12)] for _ in range(12)]
+
+    for x, y in route_coordinates:
+        if validate_coordinates(x, y):
+            grid[y][x] = 'X'
+        else:
+            print(f"Error: The route is outside of the grid ({x}, {y})")
+
+    for row in grid:
+        print(' '.join(row))
+
+if __name__ == "__main__":
+    route_file = "route_instructions.txt"  # Replace with your actual file path
+    route_coords = read_route_instructions(route_file)
+    plot_route(route_coords)
